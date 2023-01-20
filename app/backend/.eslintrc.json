@@ -24,7 +24,6 @@
     "mocha"
   ],
   "rules": {
-    "linebreak-style": ["error", "windows"],
     "no-underscore-dangle": "off",
     "no-console": "off",
     "camelcase": "warn",
