@@ -17,6 +17,9 @@ const adminUser = {
   role: 'admin',
 };
 
+const token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjU0NTI3MTg5fQ.XS_9AA82iNoiVaASi0NtJpqOQ_gHSHhxrpIdigiT-fc';
+
 describe('Integration tests of login route', () => {
   afterEach(sinon.restore);
   test("It's possible to login with the correct email and password", async () => {
@@ -29,8 +32,7 @@ describe('Integration tests of login route', () => {
 
     expect(res.status).to.be.equal(HTTPCodes.ok);
     expect(res.body).to.deep.equal({
-      token:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjU0NTI3MTg5fQ.XS_9AA82iNoiVaASi0NtJpqOQ_gHSHhxrpIdigiT-fc',
+      token,
     });
   });
   test("It's not possible to login with invalid login information", async () => {
@@ -52,5 +54,14 @@ describe('Integration tests of login route', () => {
 
     expect(res.status).to.be.equal(HTTPCodes.badRequest);
     expect(res.body).to.deep.equal({ message: 'All fields must be filled' });
+  });
+  test("It's possible see the role of a user using the 'authorization' header", async () => {
+    const res = await chai
+      .request(app)
+      .get('/login')
+      .set({ authorization: token });
+
+    expect(res.status).to.be.equal(HTTPCodes.ok);
+    expect(res.body).to.deep.equal({ role: 'admin' });
   });
 });
