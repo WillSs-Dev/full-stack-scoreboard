@@ -58,7 +58,7 @@ describe('Integration tests of login route', () => {
   test("It's possible see the role of a user using the 'authorization' header", async () => {
     const res = await chai
       .request(app)
-      .get('/login')
+      .get('/login/authorization')
       .set({ authorization: token });
 
     expect(res.status).to.be.equal(HTTPCodes.ok);
