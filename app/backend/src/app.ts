@@ -20,6 +20,7 @@ class App {
 
   private routes():void {
     this.app.post('/login', validateLoginRequest, (req, res) => userController.login(req, res));
+    this.app.get('/login/authorization', (req, res) => userController.validateUser(req, res));
   }
 
   private config():void {

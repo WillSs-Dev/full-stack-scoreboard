@@ -21,4 +21,15 @@ export default class UserService {
     }
     return null;
   };
+
+  public validateUser = async (authorization: string) => {
+    const payload = jwt.verify(
+      authorization,
+      process.env.JWT_SECRET || 'jwt_secret',
+    );
+    if (payload) {
+      return payload;
+    }
+    return null;
+  };
 }
