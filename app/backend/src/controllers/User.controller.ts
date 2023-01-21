@@ -8,7 +8,7 @@ export default class UserController {
   public login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const validateLogin = await this.service.login(email, password);
-    if (validateLogin?.token) {
+    if (validateLogin) {
       return res.status(HTTPCodes.ok).json({ token: validateLogin.token });
     }
     return res
