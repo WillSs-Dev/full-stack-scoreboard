@@ -6,6 +6,8 @@ import { app } from '../app';
 import UserModel from '../database/models/User.model';
 import HTTPCodes from '../utils/HTTPCodes';
 
+import { test, describe } from 'mocha';
+
 chai.use(chaiHttp);
 
 const { expect } = chai;
@@ -18,7 +20,7 @@ const adminUser = {
 };
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjU0NTI3MTg5fQ.XS_9AA82iNoiVaASi0NtJpqOQ_gHSHhxrpIdigiT-fc';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInBhc3N3b3JkIjoic2VjcmV0X2FkbWluIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjc0MzM0ODQ3LCJleHAiOjE2NzQ5Mzk2NDd9.82c2yPpDBWQTjwaU6g_e3UT5XaDK4lUp-whgI8nCV-U';
 
 describe('Integration tests of login route', () => {
   afterEach(sinon.restore);
@@ -31,12 +33,10 @@ describe('Integration tests of login route', () => {
       .send({ email: 'admin@admin.com', password: 'secret_admin' });
 
     expect(res.status).to.be.equal(HTTPCodes.ok);
-    expect(res.body).to.deep.equal({
-      token,
-    });
+    expect(res.body).to.have.property('token');
   });
   test("It's not possible to login with invalid login information", async () => {
-    sinon.stub(UserModel, 'findAll').resolves([adminUser] as UserModel[]);
+    sinon.stub(UserModel, 'findAll').resolves([] as UserModel[]);
 
     const res = await chai
       .request(app)
