@@ -38,6 +38,8 @@ User.init(
   },
   {
     sequelize: db,
-    modelName: 'User',
+    modelName: 'user',
+    createdAt: false,
+    updatedAt: false,
   },
 );
