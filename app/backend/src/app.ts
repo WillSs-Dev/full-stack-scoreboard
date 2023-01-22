@@ -27,6 +27,7 @@ class App {
     this.app.post('/login', validateLoginRequest, (req, res) => userController.login(req, res));
     this.app.get('/login/validate', (req, res) => userController.validateUser(req, res));
     this.app.get('/teams', (req, res) => teamController.getAll(req, res));
+    this.app.get('/teams/:id', (req, res) => teamController.getById(req, res));
   }
 
   private config():void {
