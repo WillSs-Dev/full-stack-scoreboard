@@ -26,5 +26,6 @@ Team.init(
     modelName: 'team',
     createdAt: false,
     updatedAt: false,
+    underscored: true,
   },
 );
