@@ -3,8 +3,12 @@ import validateLoginRequest from './middlewares/login';
 import UserController from './controllers/User.controller';
 import UserService from './services/User.service';
 import UserModel from './database/models/User.model';
+import TeamController from './controllers/Team.controller';
+import TeamService from './services/Team.service';
+import TeamModel from './database/models/Team.model';
 
 const userController = new UserController(new UserService(UserModel));
+const teamController = new TeamController(new TeamService(TeamModel));
 
 class App {
   public app: express.Express;
@@ -22,7 +26,7 @@ class App {
   private routes():void {
     this.app.post('/login', validateLoginRequest, (req, res) => userController.login(req, res));
     this.app.get('/login/validate', (req, res) => userController.validateUser(req, res));
-    // this.app.get('/ok', (req, res) => res.json({ ok: true }));
+    this.app.get('/teams', (req, res) => teamController.getAll(req, res));
   }
 
   private config():void {
