@@ -11,6 +11,10 @@ const teams = [
     "id": 3,
     "teamName": "Botafogo"
   },
+  {
+    "id": 5,
+    "teamName": "Cruzeiro"
+  },
 ]
 
 export { teams };

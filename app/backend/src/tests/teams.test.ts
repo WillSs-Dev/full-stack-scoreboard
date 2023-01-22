@@ -24,11 +24,11 @@ describe('Integration tests of the teams route', () => {
     expect(res.body).to.be.deep.equal(teams);
   })
   test('The /teams/:id route fetches the correct specified team', async () => {
-    sinon.stub(TeamModel, 'findByPk').resolves(teams[4] as TeamModel);
+    sinon.stub(TeamModel, 'findByPk').resolves(teams[3] as TeamModel);
 
-    const res = await chai.request(app).get('/teams/5');
+    const res = await chai.request(app).get('/teams/4');
 
     expect(res.status).to.be.equal(HTTPCodes.ok);
-    expect(res.body).to.be.deep.equal(teams[4]);
+    expect(res.body).to.be.deep.equal(teams[3]);
   })
 });
