@@ -3,7 +3,8 @@ import * as jwt from 'jsonwebtoken';
 import UserModel from '../database/models/User.model';
 
 export default class UserService {
-  private model = UserModel;
+  // private model = UserModel;
+  constructor(private model: typeof UserModel) {}
 
   public login = async (email: string, password: string) => {
     const [user] = await this.model.findAll({ where: { email } });

@@ -2,8 +2,9 @@ import * as express from 'express';
 import validateLoginRequest from './middlewares/login';
 import UserController from './controllers/User.controller';
 import UserService from './services/User.service';
+import UserModel from './database/models/User.model';
 
-const userController = new UserController(new UserService());
+const userController = new UserController(new UserService(UserModel));
 
 class App {
   public app: express.Express;
