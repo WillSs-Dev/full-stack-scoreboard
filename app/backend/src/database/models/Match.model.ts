@@ -41,7 +41,7 @@ Match.init(
         key: 'id',
       },
     },
-    awayteamGoals: {
+    awayTeamGoals: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
