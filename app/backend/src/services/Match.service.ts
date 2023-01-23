@@ -4,7 +4,7 @@ import TeamModel from '../database/models/Team.model';
 export default class MatchService {
   constructor(private model: typeof MatchModel) {}
 
-  public getAll = async () => {
+  public getAll = async (inProgress?: boolean) => {
     const results = await this.model.findAll({
       include: [
         {
@@ -18,6 +18,7 @@ export default class MatchService {
           attributes: ['teamName'],
         },
       ],
+      where: inProgress ? { inProgress } : {},
     });
     return results;
   };

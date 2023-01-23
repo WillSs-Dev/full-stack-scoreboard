@@ -1,5 +1,6 @@
 import * as express from 'express';
 import validateLoginRequest from './middlewares/login';
+import validateParams from './middlewares/match';
 import UserController from './controllers/User.controller';
 import UserService from './services/User.service';
 import UserModel from './database/models/User.model';
@@ -32,7 +33,7 @@ class App {
     this.app.get('/login/validate', (req, res) => userController.validateUser(req, res));
     this.app.get('/teams', (req, res) => teamController.getAll(req, res));
     this.app.get('/teams/:id', (req, res) => teamController.getById(req, res));
-    this.app.get('/matches', (req, res) => matchController.getAll(req, res));
+    this.app.get('/matches', validateParams, (req, res) => matchController.getAll(req, res));
   }
 
   private config():void {
