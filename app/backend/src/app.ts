@@ -6,9 +6,13 @@ import UserModel from './database/models/User.model';
 import TeamController from './controllers/Team.controller';
 import TeamService from './services/Team.service';
 import TeamModel from './database/models/Team.model';
+import MatchController from './controllers/Match.controller';
+import MatchService from './services/Match.service';
+import MatchModel from './database/models/Match.model';
 
 const userController = new UserController(new UserService(UserModel));
 const teamController = new TeamController(new TeamService(TeamModel));
+const matchController = new MatchController(new MatchService(MatchModel));
 
 class App {
   public app: express.Express;
@@ -28,6 +32,7 @@ class App {
     this.app.get('/login/validate', (req, res) => userController.validateUser(req, res));
     this.app.get('/teams', (req, res) => teamController.getAll(req, res));
     this.app.get('/teams/:id', (req, res) => teamController.getById(req, res));
+    this.app.get('/matches', (req, res) => matchController.getAll(req, res));
   }
 
   private config():void {

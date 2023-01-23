@@ -59,12 +59,14 @@ Match.init(
   },
 );
 
-Match.hasMany(Team, {
+Match.hasOne(Team, {
   foreignKey: 'id',
   sourceKey: 'homeTeamId',
+  as: 'homeTeam',
 });
 
-Match.hasMany(Team, {
+Match.hasOne(Team, {
   foreignKey: 'id',
   sourceKey: 'awayTeamId',
+  as: 'awayTeam',
 });
