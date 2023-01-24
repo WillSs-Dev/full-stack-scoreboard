@@ -15,4 +15,9 @@ export default class MatchController {
     const results = await this.service.getAll();
     return res.status(HTTPCodes.ok).json(results as IMatch[]);
   };
+
+  public create = async (req: Request, res: Response) => {
+    const newMatch = await this.service.create(req.body);
+    return res.status(HTTPCodes.created).json(newMatch as IMatch);
+  };
 }

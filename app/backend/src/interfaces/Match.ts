@@ -7,10 +7,10 @@ export default interface IMatch extends MatchModel {
   awayTeamId: number;
   awayTeamGoals: number;
   inProgress: boolean;
-  homeTeam: {
+  homeTeam?: {
     teamName: string;
   };
-  awayTeam: {
+  awayTeam?: {
     teamName: string;
   };
 }

@@ -14,4 +14,23 @@ const validateParams = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export default validateParams;
+const matchBodySchema = joi.object({
+  homeTeamId: joi.number().required(),
+  awayTeamId: joi.number().required(),
+  homeTeamGoals: joi.number().required(),
+  awayTeamGoals: joi.number().required(),
+});
+
+const validateMatchBody = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { error } = matchBodySchema.validate(req.body);
+  if (error) {
+    return res.status(HTTPCodes.badRequest).json({ message: 'Invalid request body' });
+  }
+  next();
+};
+
+export { validateParams, validateMatchBody };

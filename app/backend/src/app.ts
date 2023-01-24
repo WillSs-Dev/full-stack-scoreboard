@@ -1,6 +1,6 @@
 import * as express from 'express';
 import validateLoginRequest from './middlewares/login';
-import validateParams from './middlewares/match';
+import { validateMatchBody, validateParams } from './middlewares/match';
 import UserController from './controllers/User.controller';
 import UserService from './services/User.service';
 import UserModel from './database/models/User.model';
@@ -28,18 +28,28 @@ class App {
     this.routes();
   }
 
-  private routes():void {
-    this.app.post('/login', validateLoginRequest, (req, res) => userController.login(req, res));
-    this.app.get('/login/validate', (req, res) => userController.validateUser(req, res));
+  private routes(): void {
+    this.app.post('/login', validateLoginRequest, (req, res) =>
+      userController.login(req, res));
+    this.app.get('/login/validate', (req, res) =>
+      userController.validateUser(req, res));
+
     this.app.get('/teams', (req, res) => teamController.getAll(req, res));
     this.app.get('/teams/:id', (req, res) => teamController.getById(req, res));
-    this.app.get('/matches', validateParams, (req, res) => matchController.getAll(req, res));
+
+    this.app.get('/matches', validateParams, (req, res) =>
+      matchController.getAll(req, res));
+    this.app.post('/matches', validateMatchBody, (req, res) =>
+      matchController.create(req, res));
   }
 
-  private config():void {
+  private config(): void {
     const accessControl: express.RequestHandler = (_req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
+      res.header(
+        'Access-Control-Allow-Methods',
+        'GET,POST,DELETE,OPTIONS,PUT,PATCH',
+      );
       res.header('Access-Control-Allow-Headers', '*');
       next();
     };
@@ -48,7 +58,7 @@ class App {
     this.app.use(accessControl);
   }
 
-  public start(PORT: string | number):void {
+  public start(PORT: string | number): void {
     this.app.listen(PORT, () => console.log(`Running on port ${PORT}`));
   }
 }
