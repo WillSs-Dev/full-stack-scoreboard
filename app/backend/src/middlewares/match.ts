@@ -14,7 +14,7 @@ const validateParams = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-const matchBodySchema = joi.object({
+const newMatchBodySchema = joi.object({
   homeTeamId: joi.number().required(),
   awayTeamId: joi.number().required(),
   homeTeamGoals: joi.number().required(),
@@ -22,7 +22,7 @@ const matchBodySchema = joi.object({
 });
 
 const validateMatchBody = (req: Request, res: Response, next: NextFunction) => {
-  const { error } = matchBodySchema.validate(req.body);
+  const { error } = newMatchBodySchema.validate(req.body);
   if (error) {
     return res
       .status(HTTPCodes.badRequest)
@@ -39,4 +39,19 @@ const validateMatchBody = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export { validateParams, validateMatchBody };
+const matchResultSchema = joi.object({
+  homeTeamGoals: joi.number().required(),
+  awayTeamGoals: joi.number().required(),
+});
+
+const validateMatchResult = (req: Request, res: Response, next: NextFunction) => {
+  const { error } = matchResultSchema.validate(req.body);
+  if (error) {
+    return res
+      .status(HTTPCodes.badRequest)
+      .json({ message: 'Invalid request body' });
+  }
+  next();
+};
+
+export { validateParams, validateMatchBody, validateMatchResult };

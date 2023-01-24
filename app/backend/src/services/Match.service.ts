@@ -2,6 +2,7 @@ import * as jwt from 'jsonwebtoken';
 import IMatch from '../interfaces/Match';
 import MatchModel from '../database/models/Match.model';
 import TeamModel from '../database/models/Team.model';
+import IMatchResult from '../interfaces/MatchResult';
 
 export default class MatchService {
   constructor(private model: typeof MatchModel) {}
@@ -42,5 +43,9 @@ export default class MatchService {
 
   public finish = async (id: string) => {
     await this.model.update({ inProgress: false }, { where: { id } });
+  };
+
+  public updateResult = async (id: string, results: IMatchResult) => {
+    await this.model.update({ ...results }, { where: { id } });
   };
 }

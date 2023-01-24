@@ -41,4 +41,16 @@ export default class MatchController {
     await this.service.finish(id);
     res.status(HTTPCodes.ok).json({ message: 'Finished' });
   };
+
+  public updateResult = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const match = await this.service.getById(id);
+    if (!match) {
+      return res
+        .status(HTTPCodes.notFound)
+        .json({ message: 'Match doesn \'t exist' });
+    }
+    await this.service.updateResult(id, { ...req.body });
+    res.status(HTTPCodes.ok).json({ message: 'Result updated' });
+  };
 }

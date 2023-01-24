@@ -1,6 +1,6 @@
 import * as express from 'express';
 import validateLoginRequest from './middlewares/login';
-import { validateMatchBody, validateParams } from './middlewares/match';
+import { validateMatchBody, validateMatchResult, validateParams } from './middlewares/match';
 import UserController from './controllers/User.controller';
 import UserService from './services/User.service';
 import UserModel from './database/models/User.model';
@@ -41,6 +41,8 @@ class App {
       matchController.getAll(req, res));
     this.app.post('/matches', validateMatchBody, (req, res) =>
       matchController.create(req, res));
+    this.app.patch('/matches/:id', validateMatchResult, (req, res) =>
+      matchController.updateResult(req, res));
     this.app.patch('/matches/:id/finish', (req, res) =>
       matchController.finish(req, res));
   }
