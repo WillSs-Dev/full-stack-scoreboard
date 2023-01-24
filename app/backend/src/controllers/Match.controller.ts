@@ -29,4 +29,16 @@ export default class MatchController {
     }
     return res.status(HTTPCodes.created).json(newMatch as IMatch);
   };
+
+  public finish = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const match = await this.service.getById(id);
+    if (!match) {
+      return res
+        .status(HTTPCodes.badRequest)
+        .json({ message: 'Match doesn \'t exist' });
+    }
+    await this.service.finish(id);
+    res.status(HTTPCodes.ok).json({ message: 'Finished' });
+  };
 }

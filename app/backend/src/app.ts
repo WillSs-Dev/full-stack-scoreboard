@@ -41,6 +41,8 @@ class App {
       matchController.getAll(req, res));
     this.app.post('/matches', validateMatchBody, (req, res) =>
       matchController.create(req, res));
+    this.app.patch('/matches/:id/finish', (req, res) =>
+      matchController.finish(req, res));
   }
 
   private config(): void {

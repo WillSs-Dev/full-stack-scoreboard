@@ -34,4 +34,13 @@ export default class MatchService {
     const result = await this.model.create({ ...match, inProgress: true });
     return result;
   };
+
+  public getById = async (id: string) => {
+    const result = await this.model.findByPk(id);
+    return result;
+  };
+
+  public finish = async (id: string) => {
+    await this.model.update({ inProgress: false }, { where: { id } });
+  };
 }
