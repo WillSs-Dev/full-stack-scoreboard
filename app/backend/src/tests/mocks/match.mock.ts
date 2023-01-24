@@ -245,4 +245,20 @@ const pastMatches = [
   },
 ];
 
-export { matches, matchesInProgress, pastMatches };
+const newMatch = {
+  homeTeamId: 16,
+  awayTeamId: 8,
+  homeTeamGoals: 2,
+  awayTeamGoals: 2,
+};
+
+const newMatchResponse = {
+  id: 1,
+  homeTeamId: 16,
+  homeTeamGoals: 2,
+  awayTeamId: 8,
+  awayTeamGoals: 2,
+  inProgress: true,
+};
+
+export { matches, matchesInProgress, pastMatches, newMatch, newMatchResponse };

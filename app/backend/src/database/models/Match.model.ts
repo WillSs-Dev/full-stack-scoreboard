@@ -6,12 +6,12 @@ import db from '.';
 import Team from './Team.model';
 
 export default class Match extends Model {
-  declare id: number;
+  declare id?: number;
   declare homeTeamId: number;
   declare homeTeamGoals: number;
   declare awayTeamId: number;
   declare awayteamGoals: number;
-  declare inProgress: boolean;
+  declare inProgress?: boolean;
 }
 
 Match.init(
