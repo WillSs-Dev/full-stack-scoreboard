@@ -9,7 +9,6 @@ const querySchema = joi.object({
 const validateParams = (req: Request, res: Response, next: NextFunction) => {
   const { error } = querySchema.validate(req.query);
   if (error) {
-    console.log(error);
     return res.status(HTTPCodes.badRequest).json({ message: 'Invalid query' });
   }
   next();
