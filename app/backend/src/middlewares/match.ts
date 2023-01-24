@@ -28,8 +28,8 @@ const validateMatchBody = (req: Request, res: Response, next: NextFunction) => {
       .status(HTTPCodes.badRequest)
       .json({ message: 'Invalid request body' });
   }
-  const { homeTeam, awayTeam } = req.body;
-  if (homeTeam === awayTeam) {
+  const { homeTeamId, awayTeamId } = req.body;
+  if (homeTeamId === awayTeamId) {
     return res
       .status(HTTPCodes.unprocessableEntity)
       .json({

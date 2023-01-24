@@ -3,7 +3,7 @@ import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 import { app } from '../app';
-import MatchModel from '../database/models/match.model';
+import MatchModel from '../database/models/Match.model';
 import HTTPCodes from '../utils/HTTPCodes';
 import {
   matches,
@@ -14,6 +14,7 @@ import {
 } from './mocks/match.mock';
 import { test, describe } from 'mocha';
 import IMatch from '../interfaces/Match';
+import { token } from './mocks/login.mock';
 
 chai.use(chaiHttp);
 
@@ -48,10 +49,19 @@ describe('Integration tests of match route', () => {
   test('You can save a match on the DB', async () => {
     sinon.stub(MatchModel, 'create').resolves();
 
-    const res = await chai.request(app).post('/matches').send(newMatch);
+    const res = await chai.request(app).post('/matches').send(newMatch).set({ authorization: token });
+    console.log(res.info);
 
     expect(res.status).to.be.equal(HTTPCodes.created);
     expect(res.body).to.be.deep.equal(newMatchResponse);
+  });
+  test("You can't save a match on the DB if you don't have a valid access token", async () => {
+    sinon.stub(MatchModel, 'create').resolves();
+
+    const res = await chai.request(app).post('/matches').send(newMatch);
+
+    expect(res.status).to.be.equal(HTTPCodes.authenticationError);
+    expect(res.body).to.be.deep.equal({ message: 'Token must be a valid token' });
   });
   test("You can set the 'inProgress' status of a match to false", async () => {
     sinon.stub(MatchModel, 'update').resolves();
