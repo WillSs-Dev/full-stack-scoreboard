@@ -21,14 +21,20 @@ const matchBodySchema = joi.object({
   awayTeamGoals: joi.number().required(),
 });
 
-const validateMatchBody = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const validateMatchBody = (req: Request, res: Response, next: NextFunction) => {
   const { error } = matchBodySchema.validate(req.body);
   if (error) {
-    return res.status(HTTPCodes.badRequest).json({ message: 'Invalid request body' });
+    return res
+      .status(HTTPCodes.badRequest)
+      .json({ message: 'Invalid request body' });
+  }
+  const { homeTeam, awayTeam } = req.body;
+  if (homeTeam === awayTeam) {
+    return res
+      .status(HTTPCodes.unprocessableEntity)
+      .json({
+        message: 'It is not possible to create a match with two equal teams',
+      });
   }
   next();
 };
