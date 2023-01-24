@@ -35,7 +35,7 @@ export default class MatchController {
     const match = await this.service.getById(id);
     if (!match) {
       return res
-        .status(HTTPCodes.badRequest)
+        .status(HTTPCodes.notFound)
         .json({ message: 'Match doesn \'t exist' });
     }
     await this.service.finish(id);
