@@ -50,7 +50,6 @@ describe('Integration tests of match route', () => {
     sinon.stub(MatchModel, 'create').resolves();
 
     const res = await chai.request(app).post('/matches').send(newMatch).set({ authorization: token });
-    console.log(res.info);
 
     expect(res.status).to.be.equal(HTTPCodes.created);
     expect(res.body).to.be.deep.equal(newMatchResponse);
