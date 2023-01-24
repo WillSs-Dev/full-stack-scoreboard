@@ -9,7 +9,7 @@ export default class MatchController {
   public getAll = async (req: Request, res: Response) => {
     const { inProgress } = req.query;
     if (inProgress) {
-      const results = await this.service.getAll(JSON.parse(inProgress as string));
+      const results = await this.service.getAll(inProgress as string);
       return res.status(HTTPCodes.ok).json(results as IMatch[]);
     }
     const results = await this.service.getAll();
