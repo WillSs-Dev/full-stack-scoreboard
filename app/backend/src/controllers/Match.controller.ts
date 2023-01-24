@@ -18,16 +18,16 @@ export default class MatchController {
 
   public create = async (req: Request, res: Response) => {
     const { authorization } = req.headers;
-    const newMatch = await this.service.create(
+    const result = await this.service.create(
       req.body,
       authorization as string,
     );
-    if (!newMatch) {
+    if (!result) {
       return res
         .status(HTTPCodes.authenticationError)
         .json({ message: 'Token must be a valid token' });
     }
-    return res.status(HTTPCodes.created).json(newMatch as IMatch);
+    return res.status(HTTPCodes.created).json(result.newMatch as IMatch);
   };
 
   public finish = async (req: Request, res: Response) => {

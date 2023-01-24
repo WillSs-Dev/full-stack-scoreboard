@@ -32,7 +32,7 @@ export default class MatchService {
       return null;
     }
     const result = await this.model.create({ ...match, inProgress: true });
-    return result;
+    return { newMatch: result };
   };
 
   public getById = async (id: string) => {
