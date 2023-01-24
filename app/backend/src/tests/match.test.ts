@@ -47,7 +47,7 @@ describe('Integration tests of match route', () => {
     expect(res.body).to.be.deep.equal(pastMatches);
   });
   test('You can save a match on the DB', async () => {
-    sinon.stub(MatchModel, 'create').resolves();
+    sinon.stub(MatchModel, 'create').resolves(newMatchResponse as IMatch);
 
     const res = await chai.request(app).post('/matches').send(newMatch).set({ authorization: token });
 
