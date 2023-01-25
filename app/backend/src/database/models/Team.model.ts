@@ -3,6 +3,7 @@ import {
   Model,
 } from 'sequelize';
 import db from '.';
+// import Match from './Match.model';
 
 export default class Team extends Model {
   declare id: number;

@@ -1,6 +1,10 @@
 import * as express from 'express';
 import validateLoginRequest from './middlewares/login';
-import { validateMatchBody, validateMatchResult, validateParams } from './middlewares/match';
+import {
+  validateMatchBody,
+  validateMatchResult,
+  validateParams,
+} from './middlewares/match';
 import UserController from './controllers/User.controller';
 import UserService from './services/User.service';
 import UserModel from './database/models/User.model';
@@ -10,10 +14,15 @@ import TeamModel from './database/models/Team.model';
 import MatchController from './controllers/Match.controller';
 import MatchService from './services/Match.service';
 import MatchModel from './database/models/Match.model';
+import LeaderBoardController from './controllers/LeaderBoard.controller';
+import LeaderBoardService from './services/LeaderBoard.service';
 
 const userController = new UserController(new UserService(UserModel));
 const teamController = new TeamController(new TeamService(TeamModel));
 const matchController = new MatchController(new MatchService(MatchModel));
+const leaderBoardController = new LeaderBoardController(
+  new LeaderBoardService(MatchModel, TeamModel),
+);
 
 class App {
   public app: express.Express;
@@ -45,6 +54,9 @@ class App {
       matchController.updateResult(req, res));
     this.app.patch('/matches/:id/finish', (req, res) =>
       matchController.finish(req, res));
+
+    this.app.get('/leaderboard/home', (req, res) =>
+      leaderBoardController.getHome(req, res));
   }
 
   private config(): void {
