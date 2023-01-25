@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import * as express from 'express';
 import validateLoginRequest from './middlewares/login';
 import {
@@ -56,6 +57,8 @@ class App {
     this.app.patch('/matches/:id/finish', (req, res) =>
       matchController.finish(req, res));
 
+    this.app.get('/leaderboard', (req, res) =>
+      leaderBoardController.getGeneral(req, res));
     this.app.get('/leaderboard/home', (req, res) =>
       leaderBoardController.getHome(req, res));
     this.app.get('/leaderboard/away', (req, res) =>

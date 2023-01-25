@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import sortArray = require('sort-array');
 import ITeamStats from '../interfaces/TeamStats';
 import MatchModel from '../database/models/Match.model';
@@ -10,7 +11,10 @@ export default class LeaderBoardService {
     private teamModel: typeof TeamModel,
   ) {}
 
-  private generateHomeTeamStats = (team: TeamModel, teamMatches: MatchModel[]) => {
+  private generateHomeTeamStats = (
+    team: TeamModel,
+    teamMatches: MatchModel[],
+  ) => {
     const teamStats = new TeamStats(team.teamName, teamMatches.length);
     teamMatches.forEach((match) => {
       if (match.homeTeamGoals > match.awayTeamGoals) {
@@ -29,7 +33,10 @@ export default class LeaderBoardService {
     return teamStats;
   };
 
-  private generateAwayTeamStats = (team: TeamModel, teamMatches: MatchModel[]) => {
+  private generateAwayTeamStats = (
+    team: TeamModel,
+    teamMatches: MatchModel[],
+  ) => {
     const teamStats = new TeamStats(team.teamName, teamMatches.length);
     teamMatches.forEach((match) => {
       if (match.homeTeamGoals < match.awayTeamGoals) {
@@ -43,6 +50,33 @@ export default class LeaderBoardService {
       }
       teamStats.goalsOwn += match.homeTeamGoals;
       teamStats.goalsFavor += match.awayTeamGoals;
+    });
+    teamStats.finilizeStats();
+    return teamStats;
+  };
+
+  private generateGeneralTeamStats = (
+    team: TeamModel,
+    teamMatches: MatchModel[],
+  ) => {
+    const teamStats = new TeamStats(team.teamName, teamMatches.length);
+    teamMatches.forEach((match) => {
+      const isHomeTeam = match.homeTeamId === team.id;
+      const teamGoals = isHomeTeam ? match.homeTeamGoals : match.awayTeamGoals;
+      const opponentGoals = isHomeTeam
+        ? match.awayTeamGoals
+        : match.homeTeamGoals;
+      if (teamGoals > opponentGoals) {
+        teamStats.teamWon();
+      }
+      if (teamGoals < opponentGoals) {
+        teamStats.teamLost();
+      }
+      if (teamGoals === opponentGoals) {
+        teamStats.teamDraw();
+      }
+      teamStats.goalsOwn += opponentGoals;
+      teamStats.goalsFavor += teamGoals;
     });
     teamStats.finilizeStats();
     return teamStats;
@@ -64,7 +98,13 @@ export default class LeaderBoardService {
   private sortResults = async (allTeamsStats: Promise<ITeamStats>[]) => {
     const resolvedResults = await Promise.all(allTeamsStats);
     const sortedResults = sortArray(resolvedResults, {
-      by: ['totalPoints', 'totalVictories', 'goalsBalance', 'goalsFavor', 'goalsOwn'],
+      by: [
+        'totalPoints',
+        'totalVictories',
+        'goalsBalance',
+        'goalsFavor',
+        'goalsOwn',
+      ],
       order: ['desc', 'desc', 'desc', 'desc', 'asc'],
     });
     return sortedResults;
@@ -91,6 +131,26 @@ export default class LeaderBoardService {
         where: { awayTeamId: team.id, inProgress: false },
       });
       const teamStats = this.generateAwayTeamStats(team, teamMatches);
+      const organizedStats = this.organizeStats(teamStats);
+      return organizedStats;
+    });
+    const sortedResults = this.sortResults(allTeamsStats);
+    return sortedResults;
+  };
+
+  public getGeneral = async () => {
+    const teams = await this.teamModel.findAll();
+    const allTeamsStats = teams.map(async (team) => {
+      const awayTeamMatches = await this.matchModel.findAll({
+        where: { inProgress: false, awayTeamId: team.id },
+      });
+      const homeTeamMatches = await this.matchModel.findAll({
+        where: { inProgress: false, homeTeamId: team.id },
+      });
+      const teamStats = this.generateGeneralTeamStats(team, [
+        ...homeTeamMatches,
+        ...awayTeamMatches,
+      ]);
       const organizedStats = this.organizeStats(teamStats);
       return organizedStats;
     });
