@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import sortArray = require('sort-array');
 import ITeamStats from '../interfaces/TeamStats';
 import MatchModel from '../database/models/Match.model';
@@ -26,8 +25,7 @@ export default class LeaderBoardService {
       if (match.homeTeamGoals === match.awayTeamGoals) {
         teamStats.teamDraw();
       }
-      teamStats.goalsOwn += match.awayTeamGoals;
-      teamStats.goalsFavor += match.homeTeamGoals;
+      teamStats.goalsOwn += match.awayTeamGoals; teamStats.goalsFavor += match.homeTeamGoals;
     });
     teamStats.finilizeStats();
     return teamStats;
@@ -48,8 +46,7 @@ export default class LeaderBoardService {
       if (match.homeTeamGoals === match.awayTeamGoals) {
         teamStats.teamDraw();
       }
-      teamStats.goalsOwn += match.homeTeamGoals;
-      teamStats.goalsFavor += match.awayTeamGoals;
+      teamStats.goalsOwn += match.homeTeamGoals; teamStats.goalsFavor += match.awayTeamGoals;
     });
     teamStats.finilizeStats();
     return teamStats;
@@ -63,20 +60,11 @@ export default class LeaderBoardService {
     teamMatches.forEach((match) => {
       const isHomeTeam = match.homeTeamId === team.id;
       const teamGoals = isHomeTeam ? match.homeTeamGoals : match.awayTeamGoals;
-      const opponentGoals = isHomeTeam
-        ? match.awayTeamGoals
-        : match.homeTeamGoals;
-      if (teamGoals > opponentGoals) {
-        teamStats.teamWon();
-      }
-      if (teamGoals < opponentGoals) {
-        teamStats.teamLost();
-      }
-      if (teamGoals === opponentGoals) {
-        teamStats.teamDraw();
-      }
-      teamStats.goalsOwn += opponentGoals;
-      teamStats.goalsFavor += teamGoals;
+      const opponentGoals = isHomeTeam ? match.awayTeamGoals : match.homeTeamGoals;
+      if (teamGoals > opponentGoals) { teamStats.teamWon(); }
+      if (teamGoals < opponentGoals) { teamStats.teamLost(); }
+      if (teamGoals === opponentGoals) { teamStats.teamDraw(); }
+      teamStats.goalsOwn += opponentGoals; teamStats.goalsFavor += teamGoals;
     });
     teamStats.finilizeStats();
     return teamStats;
