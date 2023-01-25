@@ -1,3 +1,4 @@
+import sortArray = require('sort-array');
 import ITeamStats from '../interfaces/TeamStats';
 import MatchModel from '../database/models/Match.model';
 import TeamModel from '../database/models/Team.model';
@@ -42,29 +43,11 @@ export default class LeaderBoardService {
   });
 
   private sortResults = async (allTeamsStats: Promise<ITeamStats>[]) => {
-    // sorting an array of objects by two or more properties:
-
-    // https://levelup.gitconnected.com/sort-array-of-objects-by-two-properties-in-javascript-69234fa6f474
-
-    // "First, check the first (a.colA < b.colA) sort constraint. We need to check if in fact the two properties are different. If they’re different, then perform the sort. If they are not then we cannot sort them based on the first constraint."
-
     const resolvedResults = await Promise.all(allTeamsStats);
-    const sortedResults = resolvedResults
-      .sort((a, b) => {
-        if (a.totalPoints === b.totalPoints) {
-          if (a.totalVictories === b.totalVictories) {
-            if (a.goalsBalance === b.goalsBalance) {
-              if (a.goalsFavor === b.goalsFavor) {
-                return a.goalsOwn > b.goalsOwn ? -1 : 1;
-              }
-              return a.goalsFavor > b.goalsFavor ? -1 : 1;
-            }
-            return a.goalsBalance > b.goalsBalance ? -1 : 1;
-          }
-          return a.totalVictories > b.totalVictories ? -1 : 1;
-        }
-        return a.totalPoints > b.totalPoints ? -1 : 1;
-      });
+    const sortedResults = sortArray(resolvedResults, {
+      by: ['totalPoints', 'totalVictories', 'goalsBalance', 'goalsFavor', 'goalsOwn'],
+      order: ['desc', 'desc', 'desc', 'desc', 'asc'],
+    });
     return sortedResults;
   };
 
