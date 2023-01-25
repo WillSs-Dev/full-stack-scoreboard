@@ -57,6 +57,8 @@ class App {
 
     this.app.get('/leaderboard/home', (req, res) =>
       leaderBoardController.getHome(req, res));
+    this.app.get('/leaderboard/away', (req, res) =>
+      leaderBoardController.getAway(req, res));
   }
 
   private config(): void {

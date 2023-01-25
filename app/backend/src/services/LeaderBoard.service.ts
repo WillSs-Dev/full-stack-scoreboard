@@ -10,7 +10,7 @@ export default class LeaderBoardService {
     private teamModel: typeof TeamModel,
   ) {}
 
-  private generateTeamStats = (team: TeamModel, teamMatches: MatchModel[]) => {
+  private generateHomeTeamStats = (team: TeamModel, teamMatches: MatchModel[]) => {
     const teamStats = new TeamStats(team.teamName, teamMatches.length);
     teamMatches.forEach((match) => {
       if (match.homeTeamGoals > match.awayTeamGoals) {
@@ -24,6 +24,25 @@ export default class LeaderBoardService {
       }
       teamStats.goalsOwn += match.awayTeamGoals;
       teamStats.goalsFavor += match.homeTeamGoals;
+    });
+    teamStats.finilizeStats();
+    return teamStats;
+  };
+
+  private generateAwayTeamStats = (team: TeamModel, teamMatches: MatchModel[]) => {
+    const teamStats = new TeamStats(team.teamName, teamMatches.length);
+    teamMatches.forEach((match) => {
+      if (match.homeTeamGoals < match.awayTeamGoals) {
+        teamStats.teamWon();
+      }
+      if (match.homeTeamGoals > match.awayTeamGoals) {
+        teamStats.teamLost();
+      }
+      if (match.homeTeamGoals === match.awayTeamGoals) {
+        teamStats.teamDraw();
+      }
+      teamStats.goalsOwn += match.homeTeamGoals;
+      teamStats.goalsFavor += match.awayTeamGoals;
     });
     teamStats.finilizeStats();
     return teamStats;
@@ -57,7 +76,21 @@ export default class LeaderBoardService {
       const teamMatches = await this.matchModel.findAll({
         where: { homeTeamId: team.id, inProgress: false },
       });
-      const teamStats = this.generateTeamStats(team, teamMatches);
+      const teamStats = this.generateHomeTeamStats(team, teamMatches);
+      const organizedStats = this.organizeStats(teamStats);
+      return organizedStats;
+    });
+    const sortedResults = this.sortResults(allTeamsStats);
+    return sortedResults;
+  };
+
+  public getAway = async () => {
+    const teams = await this.teamModel.findAll();
+    const allTeamsStats = teams.map(async (team) => {
+      const teamMatches = await this.matchModel.findAll({
+        where: { awayTeamId: team.id, inProgress: false },
+      });
+      const teamStats = this.generateAwayTeamStats(team, teamMatches);
       const organizedStats = this.organizeStats(teamStats);
       return organizedStats;
     });
