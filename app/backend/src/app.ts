@@ -4,6 +4,7 @@ import {
   validateMatchBody,
   validateMatchResult,
   validateParams,
+  validateTeams,
 } from './middlewares/match';
 import UserController from './controllers/User.controller';
 import UserService from './services/User.service';
@@ -48,7 +49,7 @@ class App {
 
     this.app.get('/matches', validateParams, (req, res) =>
       matchController.getAll(req, res));
-    this.app.post('/matches', validateMatchBody, (req, res) =>
+    this.app.post('/matches', validateMatchBody, validateTeams, (req, res) =>
       matchController.create(req, res));
     this.app.patch('/matches/:id', validateMatchResult, (req, res) =>
       matchController.updateResult(req, res));

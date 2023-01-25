@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as joi from 'joi';
 import HTTPCodes from '../utils/HTTPCodes';
+import TeamModel from '../database/models/Team.model';
 
 const querySchema = joi.object({
   inProgress: joi.valid('true', 'false'),
@@ -54,4 +55,14 @@ const validateMatchResult = (req: Request, res: Response, next: NextFunction) =>
   next();
 };
 
-export { validateParams, validateMatchBody, validateMatchResult };
+const validateTeams = async (req: Request, res: Response, next: NextFunction) => {
+  const { homeTeamId, awayTeamId } = req.body;
+  const homeTeam = await TeamModel.findByPk(homeTeamId);
+  const awayTeam = await TeamModel.findByPk(awayTeamId);
+  if (!homeTeam || !awayTeam) {
+    return res.status(HTTPCodes.notFound).json({ message: 'There is no team with such id!' });
+  }
+  next();
+};
+
+export { validateParams, validateMatchBody, validateMatchResult, validateTeams };
