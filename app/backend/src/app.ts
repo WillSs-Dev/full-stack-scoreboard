@@ -1,30 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import * as express from 'express';
-import validateLoginRequest from './middlewares/login';
-import {
-  validateMatchBody,
-  validateMatchResult,
-  validateParams,
-  validateTeams,
-} from './middlewares/match';
-import UserController from './controllers/User.controller';
-import UserService from './services/User.service';
-import UserModel from './database/models/User.model';
-import TeamController from './controllers/Team.controller';
-import TeamService from './services/Team.service';
-import TeamModel from './database/models/Team.model';
-import MatchController from './controllers/Match.controller';
-import MatchService from './services/Match.service';
-import MatchModel from './database/models/Match.model';
-import LeaderBoardController from './controllers/LeaderBoard.controller';
-import LeaderBoardService from './services/LeaderBoard.service';
 
-const userController = new UserController(new UserService(UserModel));
-const teamController = new TeamController(new TeamService(TeamModel));
-const matchController = new MatchController(new MatchService(MatchModel));
-const leaderBoardController = new LeaderBoardController(
-  new LeaderBoardService(MatchModel, TeamModel),
-);
+import userRouter from './routes/user.routes';
+import teamRouter from './routes/team.routes';
+import matchRouter from './routes/match.routes';
+import leaderBoardRouter from './routes/leaderBoard.routes';
 
 class App {
   public app: express.Express;
@@ -40,29 +20,13 @@ class App {
   }
 
   private routes(): void {
-    this.app.post('/login', validateLoginRequest, (req, res) =>
-      userController.login(req, res));
-    this.app.get('/login/validate', (req, res) =>
-      userController.validateUser(req, res));
+    this.app.use('/login', userRouter);
 
-    this.app.get('/teams', (req, res) => teamController.getAll(req, res));
-    this.app.get('/teams/:id', (req, res) => teamController.getById(req, res));
+    this.app.use('/teams', teamRouter);
 
-    this.app.get('/matches', validateParams, (req, res) =>
-      matchController.getAll(req, res));
-    this.app.post('/matches', validateMatchBody, validateTeams, (req, res) =>
-      matchController.create(req, res));
-    this.app.patch('/matches/:id', validateMatchResult, (req, res) =>
-      matchController.updateResult(req, res));
-    this.app.patch('/matches/:id/finish', (req, res) =>
-      matchController.finish(req, res));
+    this.app.use('/matches', matchRouter);
 
-    this.app.get('/leaderboard', (req, res) =>
-      leaderBoardController.getGeneral(req, res));
-    this.app.get('/leaderboard/home', (req, res) =>
-      leaderBoardController.getHome(req, res));
-    this.app.get('/leaderboard/away', (req, res) =>
-      leaderBoardController.getAway(req, res));
+    this.app.use('leaderboard', leaderBoardRouter);
   }
 
   private config(): void {
