@@ -26,7 +26,7 @@ class App {
 
     this.app.use('/matches', matchRouter);
 
-    this.app.use('leaderboard', leaderBoardRouter);
+    this.app.use('/leaderboard', leaderBoardRouter);
   }
 
   private config(): void {
